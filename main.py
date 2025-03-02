@@ -11,7 +11,7 @@ if __name__ == '__main__':
     text_to_audio('你好，有什么需要帮忙的吗？')
     messages = None
     while True:
-        text = audio_to_text('response.wav')
+        text = audio_to_text()
         if text not in ['无法识别音频', '服务不可用']:
             context, messages = my_ai.conversation(text, messages=messages)
             messages.append({'role': 'assistant', 'content': context})
