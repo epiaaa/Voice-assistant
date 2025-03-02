@@ -11,50 +11,55 @@ def text_get_wav(text):
         "text": text,
         "text_language": "zh",
         "cut_punc": "， 。",
-        "refer_wav_path": r"", # 参考语音3-10s，最好5s
+        "refer_wav_path": r"G:\Python\Tool\Conversations\ref_audio\克拉拉.wav",
         "prompt_language": "zh",
-        "prompt_text": "" # 参考语音说的什么
+        "prompt_text": "娜塔莎姐姐说克拉拉也是医生呢，是机器伙伴的医生。"
     }
     url = 'http://localhost:9880'
     response = requests.get(url, params=json)
     # print(response.url)
     # print(response.status_code)
     # print(response.content)
-    with open('./response.wav', 'wb') as f:
+    with open('./audio/response.wav', 'wb') as f:
         f.write(response.content)
 
 
-def play_wav(file_path):
+def play_wav():
     # 打开WAV文件
-    wf = wave.open(file_path, 'rb')
+    wf = wave.open('./audio/response.wav', 'rb')
 
     # 初始化PyAudio
     p = pyaudio.PyAudio()
+
+    # 打开音频流
     stream = p.open(format=p.get_format_from_width(wf.getsampwidth()),
                     channels=wf.getnchannels(),
                     rate=wf.getframerate(),
                     output=True)
 
-    data = wf.readframes(1024) # 读取数据
+    # 读取数据
+    data = wf.readframes(1024)
 
     # 播放音频
     while data:
         stream.write(data)
         data = wf.readframes(1024)
 
-    # 结束
+    # 停止和关闭流
     stream.stop_stream()
     stream.close()
+
+    # 关闭PyAudio
     p.terminate()
 
 
 def text_to_audio(text):
     text_get_wav(text)
     print(text)
-    play_wav('./response.wav')
+    play_wav()
 
 
-def record_wav(filename, silence_threshold=500, silence_duration=1.5):
+def record_wav(silence_threshold=500, silence_duration=1.5):
     CHUNK = 1024
     FORMAT = pyaudio.paInt16
     CHANNELS = 1
@@ -88,16 +93,16 @@ def record_wav(filename, silence_threshold=500, silence_duration=1.5):
     stream.close()
     p.terminate()
 
-    with wave.open(filename, 'wb') as f:
+    with wave.open('./audio/question.wav', 'wb') as f:
         f.setnchannels(CHANNELS)
         f.setsampwidth(p.get_sample_size(FORMAT))
         f.setframerate(RATE)
         f.writeframes(b''.join(frames))
 
 
-def recognize_wav(filename):
+def recognize_wav():
     r = sr.Recognizer()
-    with sr.AudioFile(filename) as source:
+    with sr.AudioFile('./audio/question.wav') as source:
         audio_data = r.record(source)
     try:
         print("识别中...")
@@ -110,10 +115,11 @@ def recognize_wav(filename):
         return "服务不可用"
 
 
-def audio_to_text(filename):
-    record_wav(filename)
-    return recognize_wav(filename)
+def audio_to_text():
+    record_wav()
+    return recognize_wav()
 
 
 if __name__ == '__main__':
-    audio_to_text('test.wav')
+    audio_to_text()
+
