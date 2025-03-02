@@ -1,2 +1,2 @@
-from speech import text2audio
+from speech import convert_text_and_speech
 
