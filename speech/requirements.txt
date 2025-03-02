@@ -1,9 +1,0 @@
-speech_recognition
-gtts
-pygame
-
-flask
-gevent
-python-dotenv
-edge-tts
-emoji
