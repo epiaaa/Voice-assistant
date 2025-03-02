@@ -11,9 +11,9 @@ def text_get_wav(text):
         "text": text,
         "text_language": "zh",
         "cut_punc": "， 。",
-        "refer_wav_path": r"G:\Python\Tool\Conversations\ref_audio\克拉拉.wav",
+        "refer_wav_path": r"", # 参考语音3-10s，最好5s
         "prompt_language": "zh",
-        "prompt_text": "娜塔莎姐姐说克拉拉也是医生呢，是机器伙伴的医生。"
+        "prompt_text": "" # 参考语音说的什么
     }
     url = 'http://localhost:9880'
     response = requests.get(url, params=json)
@@ -30,26 +30,21 @@ def play_wav(file_path):
 
     # 初始化PyAudio
     p = pyaudio.PyAudio()
-
-    # 打开音频流
     stream = p.open(format=p.get_format_from_width(wf.getsampwidth()),
                     channels=wf.getnchannels(),
                     rate=wf.getframerate(),
                     output=True)
 
-    # 读取数据
-    data = wf.readframes(1024)
+    data = wf.readframes(1024) # 读取数据
 
     # 播放音频
     while data:
         stream.write(data)
         data = wf.readframes(1024)
 
-    # 停止和关闭流
+    # 结束
     stream.stop_stream()
     stream.close()
-
-    # 关闭PyAudio
     p.terminate()
 
 
