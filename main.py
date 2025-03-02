@@ -1,4 +1,4 @@
-from speech.text2audio import text_to_audio, audio_to_text
+from speech.convert_text_and_speech import text_to_audio, audio_to_text
 from AI import *
 
 DeepSeek_API_Key = 'sk-8735744e32f04635af0caa27e341a60d'
